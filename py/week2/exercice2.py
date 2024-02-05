@@ -3,13 +3,12 @@ def fibonacci_last_digit(n):
         return n
 
     previous = 0
-    current  = 1
+    current = 1
 
-    for _ in range(n - 1):
-        previous, current = current, previous + current
-    print(current)
-    return current % 10
+    for _ in range((n - 1) % 60):
+        previous, current = current, (previous + current) % 10
 
+    return current
 
 if __name__ == '__main__':
     n = int(input())

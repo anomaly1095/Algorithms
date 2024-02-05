@@ -6,5 +6,6 @@ def fibonacci_number(n):
 
 
 if __name__ == '__main__':
-    input_n = int(input())
-    print(fibonacci_number(input_n))
+    #input_n = int(input())
+    
+    print(fibonacci_number(40))
