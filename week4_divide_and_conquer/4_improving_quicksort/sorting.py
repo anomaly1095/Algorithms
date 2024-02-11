@@ -1,8 +1,23 @@
 from random import randint
 
-
 def partition3(array, left, right):
-    # write your code here
+    pivot = array[left]
+    less_than_pivot = left
+    equal_to_pivot = left
+    greater_than_pivot = right
+
+    while equal_to_pivot <= greater_than_pivot:
+        if array[equal_to_pivot] < pivot:
+            array[less_than_pivot], array[equal_to_pivot] = array[equal_to_pivot], array[less_than_pivot]
+            less_than_pivot += 1
+            equal_to_pivot += 1
+        elif array[equal_to_pivot] == pivot:
+            equal_to_pivot += 1
+        else:
+            array[equal_to_pivot], array[greater_than_pivot] = array[greater_than_pivot], array[equal_to_pivot]
+            greater_than_pivot -= 1
+
+    return less_than_pivot, equal_to_pivot - 1
 
 
 def randomized_quick_sort(array, left, right):
