@@ -1,0 +1,45 @@
+-------------------------
+* Benchmarking results
+* Date: 2024-02-13 00:11:24.567119
+* Size of input: 10
+merge sort: 0.00007157
+-------------------------
+* Benchmarking results
+* Date: 2024-02-13 00:13:39.609258
+* Size of input: 10
+merge sort: 0.00007755
+-------------------------
+* Benchmarking results
+* Date: 2024-02-13 00:19:30.112493
+* Size of input: 100
+count sort O(n)'technically': 0.00009223
+merge sort O(nlog(n)): 0.00055203
+-------------------------
+* Benchmarking results
+* Date: 2024-02-13 00:24:02.822122
+* Size of input: 100
+count sort O(n)'technically': 0.00009980
+merge sort O(nlog(n)): 0.00067263
+-------------------------
+* Benchmarking results
+* Date: 2024-02-13 00:41:38.053067
+* Size of input: 100
+count sort O(n)'technically': 0.00012887
+merge sort O(nlog(n)): 0.00067534
+-------------------------
+* Benchmarking results
+* Date: 2024-02-13 00:42:14.512529
+* Size of input: 100
+count sort O(n)'technically': 0.00009896
+merge sort O(nlog(n)): 0.00059413
+-------------------------
+* Benchmarking results
+* Date: 2024-02-13 00:47:05.720863
+* Size of input: 100
+count sort O(n)'technically': 0.00012974
+merge sort O(nlog(n)): 0.00073419
+-------------------------
+* Benchmarking results
+* Date: 2024-02-13 01:03:36.370063
+* Size of input: 100
+merge sort O(nlog(n)): 0.00060450
