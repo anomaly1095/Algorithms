@@ -1,5 +1,5 @@
 import typing
-
+from random import randint
 #parent class
 class sorting_algo():...
 
@@ -92,27 +92,47 @@ class merge_sort_algo(sorting_algo):
 #---------------------------------------- Quick Sort
 
 class quick_sort(sorting_algo):
-    def in_place_random_quick_sort3(arr: list, lower: int, upper: int):
     
-        return arr
+    @classmethod
+    def random_quick_sort3(cls, arr: list):
+        if len(arr) <= 1:
+            return arr
+        else:
+            pivot_index = randint(0, len(arr)-1)
+            pivot_arr = [x for x in arr if x == arr[pivot_index]]
+            less_arr = [x for x in arr if x < arr[pivot_index]]
+            greater_arr = [x for x in arr if x > arr[pivot_index]]
+            
+        return cls.random_quick_sort3(less_arr) + pivot_arr + cls.random_quick_sort3(greater_arr)
 
+    @classmethod
+    def in_place_random_quick_sort3(cls, arr, lower, upper):
+        if lower < upper:
+            pivot_index = randint(lower, upper)
+            pivot = arr[pivot_index]
 
-    def random_quick_sort3(arr: list, lower: int, upper: int):
-        return arr
+            # Initialize pointers for three-way partitioning
+            left = lower
+            right = upper
+            i = lower
 
+            while i <= right:
+                if arr[i] < pivot:
+                    arr[i], arr[left] = arr[left], arr[i]
+                    left += 1
+                    i += 1
+                elif arr[i] > pivot:
+                    arr[i], arr[right] = arr[right], arr[i]
+                    right -= 1
+                else:
+                    i += 1
 
-    def in_place_quick_sort3(arr: list, lower: int, upper: int):
-        return arr
-
-    def quick_sort3(arr: list, lower: int, upper: int):
-        
-        return arr
-
-
-    
-
-
-
+            # Recursive calls on the sub-arrays
+            cls.in_place_random_quick_sort3(arr, lower, left - 1)
+            cls.in_place_random_quick_sort3(arr, right + 1, upper)
+            
+            
+            
 
 #---------------------------------------- Heap sort
 
@@ -132,5 +152,5 @@ def shell_sort(arr: list):
 
 if __name__ == '__main__':
     arr = [1, 9, 2, 8, 1, 0, 4, 1, 3, 5, 7, 6, 3, 6, 0, 9, 1]
-    merge_sort_algo.in_place_merge_sort(arr, 0, len(arr)-1)
+    quick_sort.in_place_random_quick_sort3(arr, 0, len(arr)-1)
     print(arr)
