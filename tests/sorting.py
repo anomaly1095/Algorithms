@@ -106,7 +106,7 @@ class quick_sort(sorting_algo):
         return cls.random_quick_sort3(less_arr) + pivot_arr + cls.random_quick_sort3(greater_arr)
 
     @classmethod
-    def in_place_random_quick_sort3(cls, arr, lower, upper):
+    def in_place_random_quick_sort3(cls, arr: list, lower: int, upper: int):
         if lower < upper:
             pivot_index = randint(lower, upper)
             pivot = arr[pivot_index]

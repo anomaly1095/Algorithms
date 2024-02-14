@@ -109,7 +109,7 @@ class test_performance:
     def start_quick_sort(arr: list, result_list: List[str]) -> None:
         
         start_quick_sort = perf_counter()
-        arr = sorting.quick_sort.quick_sort3(arr, 0, len(arr)-1)   #change for the most efficient algorithms
+        arr = sorting.quick_sort.in_place_random_quick_sort3(arr, 0, len(arr)-1)   #change for the most efficient algorithms
         end_quick_sort = perf_counter()
         
         s = f"quick sort O(nlog(n)): {end_quick_sort-start_quick_sort:.8f}"
@@ -157,8 +157,8 @@ class test_performance:
         cls.start_merge_sort(arr2, result_list)
         output_file.write(f"---------------------merge sort output---------------------\n{arr2}\n")
         
-        # cls.start_quick_sort(arr3, result_list)
-        # output_file.write(f"---------------------quick sort output---------------------\n{arr3}\n")
+        cls.start_quick_sort(arr3, result_list)
+        output_file.write(f"---------------------quick sort output---------------------\n{arr3}\n")
         
         # cls.start_shell_sort(arr4, result_list)
         # output_file.write(f"---------------------shell sort output---------------------\n{arr4}\n")
@@ -204,9 +204,8 @@ def main() -> None:
         arr: List[int] = check_int_or_float._float()
         print(arr)
         result_list = test_performance.sorting_algo_performance(arr, float)
-        
-    test_performance.write_file(arr, result_list)
 
+    test_performance.write_file(arr, result_list)
 
 if __name__ == '__main__':
     main()
