@@ -2,51 +2,79 @@
 #include <stdlib.h>
 #include <time.h>
 
-const int MAX = 100, MIN = 0;
-const int RANGE = MAX - MIN + 1;                                        //not working
 
-int binary_search_recursive(int *arr, int low, int high, int target) {
-    if (low <= high) {
-        int mid = low + (high - low) / 2;
+#include <stdio.h>
+#include <stdlib.h>
 
-        if (arr[mid] == target) {
-            return mid; // Target found, return the index
-        } else if (arr[mid] < target) {
-            return binary_search_recursive(arr, mid + 1, high, target); // Search in the right half
-        } else {
-            return binary_search_recursive(arr, low, mid - 1, target); // Search in the left half
+void swap(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int partition(int *arr, int lower, int upper){
+    int pivot_index = rand() % (upper - lower + 1) + lower;
+    int pivot = arr[pivot_index];
+
+    swap(&arr[pivot_index], &arr[upper]);
+    
+    int i = lower - 1;
+
+    for (int j = lower; j < upper; j++) {
+        if (arr[j] > pivot) {
+            i++;
+            swap(&arr[i], &arr[j]);
         }
     }
-    return low;
+
+    swap(&arr[i + 1], &arr[upper]);
+    return i + 1;
+}
+
+void quick_sort(int *arr, int lower, int upper){
+    if (upper > lower){
+        int pivot_index = partition(arr, lower, upper);
+
+        quick_sort(arr, lower, pivot_index - 1);
+        quick_sort(arr, pivot_index + 1, upper);
+    }
+}
+
+int binary_search(int *arr, int lower, int upper, int target){
+    if (upper > lower){
+        int mid = (upper+lower)/2;
+
+        if (*(arr+mid) > target){
+            binary_search(arr, mid+1, upper, target);
+        }else if (*(arr+mid) > target){
+            binary_search(arr, lower, mid-1, target);
+        }else{
+            return mid;
+        }
+    }
+    return upper; // returns index where the target should be inserted 
 }
 
 
-int fill_list(int *arr, int size) {
-    srand(time(NULL));  // Seed the random number generator
-    printf("[");
-    for (int i = 0; i < size; i++) {
-        int seed = rand() % RANGE - MIN;
-        *(arr + i) = seed * 7 + (i * 5);
-        printf("%d, ", *(arr + i));
 
-        if (*(arr + i) < 0) { // Overflow or unexpected inputs
-            return -1;
-        }
+void populate_array(int *arr, int size){
+    int min = 0, max = 10000;
+    unsigned seed = (unsigned)time(NULL);
+    srand(seed);
+    for (int i = 0; i < size; i++){
+        *(arr+i) = rand() % (max-min+1) - min;
     }
-    printf("]\n");
-    return 0;
 }
 
 int main(int argc, char **argv){
-    if (argc != 2)
-    {
-        printf("Usage %s <size>\n", argv[0]);
-    }
-    int target, size = atoi(argv[1]);
+    int size = 100, target;
     int *arr = (int*)calloc(sizeof(int), size);
-    fill_list(arr, size);
-    printf("Enter target value: ");
+    populate_array(arr, size);
+    quick_sort(arr, 0, size-1);
+    for (int i = 0; i < size; i++){
+        printf("%d ", *(arr+i));
+    }printf("\n");
     scanf("%d", &target);
-    printf("%d", binary_search_recursive(arr, 0, size-1, target));
+    printf("%d", binary_search(arr, 0, size-1, target));
     return 0;
 }
