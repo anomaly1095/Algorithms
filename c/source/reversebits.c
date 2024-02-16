@@ -4,8 +4,9 @@
 
 
 
-
-int main(int argc, char **argv){
-    printf("%d\n", argv[1]);
+int main(){
+    char c = '2';
+    int i = (int)c;
+    printf("%d\n", i);
     return 0;
 }
