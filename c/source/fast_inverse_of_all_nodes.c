@@ -4,16 +4,14 @@
             // Program to insert the fast inverse square root in the linked list
 //####################################
 
-#define int32 int
-
 // link node
 typedef struct Node{
-    int32 val;
+    float val;
     struct Node *link;
 }Node;
 
 // add node in linked list
-void add_node(Node **head, int32 val){
+void add_node(Node **head, float val){
     if (*head == NULL){
         *head = (Node*)malloc(sizeof(Node));
         (*head)->link = NULL;
@@ -29,21 +27,29 @@ void add_node(Node **head, int32 val){
     }
 }
 
-// insert node at position
-void insert_node(Node **head, int32 val, char pos){
-    Node *temp = *head, *new = (Node*)malloc(sizeof(Node));
-    char i = 00;
-    while (temp->link != NULL){
-        temp = temp->link;
-        ++i;
-        if (i == pos){
-            new->val = val;
-            new->link = temp->link;
-            temp->link = new;
-        }
-    }
-    printf("\n");
+float q_rsqrt(float number)
+{
+  long i;
+  float x2, y;
+
+  x2 = number * 0.5F;
+  y  = number;
+  i  = * ( long * ) &y;                       // evil floating point bit level hacking
+  i  = 0x5f3759df - ( i >> 1 );               // what the fuck?
+  y  = * ( float * ) &i;
+  y  = y * ( 1.5F - ( x2 * y * y ) );
+  y  = y * ( 1.5F - ( x2 * y * y ) );
+  return y;
 }
+
+void inv_all(Node **head){
+    Node *temp = *head;
+    while (temp != NULL){
+        temp->val = q_rsqrt(temp->val);
+        temp = temp->link;
+    }
+}
+
 
 // free all nodes
 void print_list(Node *head){
@@ -65,9 +71,9 @@ void free_nodes(Node **head){
     }
 }
 
-int32 _m_atoi(char *arr){
+float _m_atoi(char *arr){
     char i;
-    int32 val = 00, coeff = 01;
+    float val = 00, coeff = 01;
     for (i = 0; arr[i+1] != 00; ++i){}
     while (i >= 00){
         while (arr[i] == 0x30){
@@ -84,19 +90,25 @@ int32 _m_atoi(char *arr){
 //####################################
 
 int main(int argc, char **argv){
-    if (argc < 4){
+    if (argc == 1){
         printf("Usage: %s <values...> <position of insertion>\n", argv[0]);
         return 01;
     }
-    int32 val;
+    float val;
     Node *head = NULL;
     char i;
-    for (i = 1; i < argc-1; ++i){
+    for (i = 1; i < argc; ++i){
         val = _m_atoi(argv[i]);
         add_node(&head, val);
     }
+    printf("----------------Before----------------\n");
     print_list(head);
-    insert_node(&head, _m_atoi(argv[argc-2]), _m_atoi(argv[argc-1]));
+
+    inv_all(&head);
+    
+    printf("----------------After----------------\n");
+    print_list(head);
+    
     free_nodes(&head);
     return 0;
 }
