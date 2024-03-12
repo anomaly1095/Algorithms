@@ -16,58 +16,58 @@
   #define MAX 100
   #define MIN 00
 
-  #define SPACE 0x20
+  #define SEPARATION 0x7C
   #define ret return
   #if MIN < 0
     #if MAX >= 0
       #if MAX <= 0xF
         typedef signed char __data_type;  // Use signed data type
-        const char *__format_s = "%hhd %c";
+        const char *__format_s = "%c %hhd %c";
         #define MAX_RC 0x3
       #elif MAX > 0xF && MAX <= 0xFF
         typedef signed short __data_type;
-        const char *__format_s = "%hd %c";
+        const char *__format_s = "%c %hd %c";
         #define MAX_RC 0x5
       #elif MAX > 0xFF && MAX <= 0xFFFF
         typedef signed int __data_type;
-        const char *__format_s = "%d %c";
+        const char *__format_s = "%c %d %c";
         #define MAX_RC 0xA
       #elif MAX > 0xFFFF
         typedef signed long long __data_type;
-        const char *__format_s = "%ll %c";
+        const char *__format_s = "%c %ll %c";
         #define MAX_RC 0x1E
       #endif
     #else
       #if MAX >= -0xF
         typedef signed char __data_type;  // Use signed data type
-        const char *__format_s = "%hhd %c";
+        const char *__format_s = "%c %hhd %c";
         #define MAX_RC 0x3
       #elif MAX < -0xF && MAX >= -0xFF
         typedef signed short __data_type;
-        const char *__format_s = "%hd %c";
+        const char *__format_s = "%c %hd %c";
         #define MAX_RC 0x5
       #elif MAX < -0xFF && MAX >= -0xFFFF
         typedef signed int __data_type;
-        const char *__format_s = "%d %c";
+        const char *__format_s = "%c %d %c";
         #define MAX_RC 0xA
       #elif MAX < -0xFFFF
         typedef signed long long __data_type;
-        const char *__format_s = "%ll %c";
+        const char *__format_s = "%c %ll %c";
         #define MAX_RC 0x1E
       #endif
     #endif
   #else
     #if MAX <= 0xF
       typedef unsigned char __data_type;  // Use unsigned data type
-      const char *__format_s = "%hhu %c";
+      const char *__format_s = "%c %hhu %c";
       #define MAX_RC 0x3
     #elif MAX > 0xF && MAX <= 0xFF
       typedef unsigned short __data_type;
-      const char *__format_s = "%hu %c";
+      const char *__format_s = "%c %hu %c";
       #define MAX_RC 0x5
     #elif MAX > 0xFF && MAX <= 0xFFFF
       typedef unsigned int __data_type;
-      const char *__format_s = "%u %c";
+      const char *__format_s = "%c %u %c";
       #define MAX_RC 0xA
     #elif MAX > 0xFFFF
       typedef unsigned long long __data_type;

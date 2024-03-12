@@ -13,8 +13,8 @@ int main(int argc, char **argv){
   
   pthread_t t1, t2, t3;
   Thread_struct_mult args = {
-    .matrix1 = {.rows = 00, .cols = 00, .matrix = NULL},
-    .matrix2 = {.rows = 00, .cols = 00, .matrix = NULL},
+    .matrix1 =    {.rows = 00, .cols = 00, .matrix = NULL},
+    .matrix2 =    {.rows = 00, .cols = 00, .matrix = NULL},
     .matrix_res = {.rows = 00, .cols = 00, .matrix = NULL}
   };
 
