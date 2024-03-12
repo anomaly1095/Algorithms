@@ -18,76 +18,96 @@
 
   #define SEPARATION 0x7C
   #define ret return
-  #if MIN < 0
-    #if MAX >= 0
+  #if MIN < 00  
+    #if MAX >= 0 // if min negative and max positive
       #if MAX <= 0xF
         typedef signed char __data_type;  // Use signed data type
         const char *__format_s = "%c %hhd %c";
+        const char *__format_impo = "Matrix multiplication impossible: M1(%hhd, %hhd) M2(%hhd, %hhd)\n";
         #define MAX_RC 0x3
       #elif MAX > 0xF && MAX <= 0xFF
         typedef signed short __data_type;
         const char *__format_s = "%c %hd %c";
+        const char *__format_impo = "Matrix multiplication impossible: M1(%hd, %hd) M2(%hd, %hd)\n";
         #define MAX_RC 0x5
       #elif MAX > 0xFF && MAX <= 0xFFFF
         typedef signed int __data_type;
         const char *__format_s = "%c %d %c";
+        const char *__format_impo = "Matrix multiplication impossible: M1(%d, %d) M2(%d, %d)\n";
         #define MAX_RC 0xA
       #elif MAX > 0xFFFF
         typedef signed long long __data_type;
         const char *__format_s = "%c %ll %c";
+        const char *__format_impo = "Matrix multiplication impossible: M1(%ll, %ll) M2(%ll, %ll)\n";
+
         #define MAX_RC 0x1E
       #endif
     #else
-      #if MAX >= -0xF
+      #if MAX >= -0xF // if min and max negative
         typedef signed char __data_type;  // Use signed data type
         const char *__format_s = "%c %hhd %c";
+        const char *__format_impo = "Matrix multiplication impossible: M1(%hhd, %hhd) M2(%hhd, %hhd)\n";
+
         #define MAX_RC 0x3
       #elif MAX < -0xF && MAX >= -0xFF
         typedef signed short __data_type;
         const char *__format_s = "%c %hd %c";
+        const char *__format_impo = "Matrix multiplication impossible: M1(%hd, %hd) M2(%hd, %hd)\n";
+
         #define MAX_RC 0x5
       #elif MAX < -0xFF && MAX >= -0xFFFF
         typedef signed int __data_type;
         const char *__format_s = "%c %d %c";
+        const char *__format_impo = "Matrix multiplication impossible: M1(%d, %d) M2(%d, %d)\n";
+
         #define MAX_RC 0xA
       #elif MAX < -0xFFFF
         typedef signed long long __data_type;
         const char *__format_s = "%c %ll %c";
+        const char *__format_impo = "Matrix multiplication impossible: M1(%ll, %ll) M2(%ll, %ll)\n";
         #define MAX_RC 0x1E
       #endif
     #endif
-  #else
-    #if MAX <= 0xF
+  #else // if min and max positive
+    #if MAX <= 0xF 
       typedef unsigned char __data_type;  // Use unsigned data type
       const char *__format_s = "%c %hhu %c";
+      const char *__format_impo = "Matrix multiplication impossible: M1(%hhu, %hhu) M2(%hhu, %hhu)\n";
       #define MAX_RC 0x3
     #elif MAX > 0xF && MAX <= 0xFF
       typedef unsigned short __data_type;
       const char *__format_s = "%c %hu %c";
+      const char *__format_impo = "Matrix multiplication impossible: M1(%hu, %hu) M2(%hu, %hu)\n";
+      
       #define MAX_RC 0x5
     #elif MAX > 0xFF && MAX <= 0xFFFF
       typedef unsigned int __data_type;
       const char *__format_s = "%c %u %c";
+      const char *__format_impo = "Matrix multiplication impossible: M1(%u, %u) M2(%u, %u)\n";
+
       #define MAX_RC 0xA
     #elif MAX > 0xFFFF
       typedef unsigned long long __data_type;
       const char *__format_s = "%llu %c";
+      const char *__format_impo = "Matrix multiplication impossible: M1(%llu, %llu) M2(%llu, %llu)\n";
+
       #define MAX_RC 0x1E
     #endif
   #endif
   
-  const __data_type RANGE = (MAX - MIN) - 1;
+  const __data_type RANGE = (MAX - MIN) - 1; // calc range for generating random numbers in the range
   
-  typedef struct Thread_struct_fill{
+  typedef struct Thread_struct_fill{ // struct will be passed as thread args to t1 and t2
     __data_type **matrix;
     __data_type *rows;
     __data_type *cols;
   }Thread_struct_fill;
   
-  typedef struct Thread_struct_mult{
+  typedef struct Thread_struct_mult{ //struct will be passed as thread args to t3
     Thread_struct_fill matrix1;
     Thread_struct_fill matrix2;
     Thread_struct_fill matrix_res;
+    __data_type row_to_process;
   }Thread_struct_mult;
 
 #endif // MATRIX_MULT_H
@@ -110,17 +130,17 @@ char _check_input(char *arr);
 void _conv_rc(char *arr, __data_type *rows, __data_type *cols);
 
 /// @brief allocate memory space for 2D array
-/// @param rows (__data_type *) rows 
-/// @param cols (__data_type *) cols
+/// @param rows (__data_type) rows 
+/// @param cols (__data_type) cols
 /// @return (__data_type **) 2D array (matrix)
-__data_type **alloc_matrix(__data_type rows, __data_type cols);
+__data_type **calloc_matrix(__data_type rows, __data_type cols);
 
 /// @brief populate the matrix with ra,dom values [MIN .. MAX]
 /// @param matrix (__data_type **) 2D array
 /// @param rows (__data_type *) rows 
 /// @param cols (__data_type *) cols 
 /// @return (void *)
-void *fill_2d_arr(Thread_struct_fill *arg);
+void *fill_2d_arr(void *argptr);
 
 /// @brief display the content of the matrix
 /// @param matrix (__data_type**) 2D array
@@ -139,4 +159,4 @@ void dealloc_matrix(__data_type** restrict matrix, __data_type rows, __data_type
 /// @param res_matrix (__data_type **) resulting array
 /// @param r1c1r2c2 (__data_type *) row1 col1 row2 col2
 /// @return 
-void *matrix_mult(Thread_struct_mult *arg);
+void* matrix_mult(void* argptr);
