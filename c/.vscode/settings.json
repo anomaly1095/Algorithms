@@ -5,6 +5,7 @@
         "linked_list.h": "c",
         "cstdlib": "c",
         "memory": "c",
-        "new": "c"
+        "new": "c",
+        "multithreaded_matrix_multiplication.h": "c"
     }
 }
