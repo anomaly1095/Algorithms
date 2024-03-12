@@ -118,6 +118,8 @@
 /// @return exit code (standard defined in errno)
 int main(int argc, char **argv);
 
+void _check(int argc, char **argv);
+
 /// @brief check for invalid chars in inputs 
 /// @param arr (char *) cmd line args
 /// @return (char) 1 if invalid 0 if valid
@@ -134,6 +136,14 @@ void _conv_rc(char *arr, __data_type *rows, __data_type *cols);
 /// @param cols (__data_type) cols
 /// @return (__data_type **) 2D array (matrix)
 __data_type **calloc_matrix(__data_type rows, __data_type cols);
+
+/// @brief allocates all memory and sets up values 
+/// @param arr1 
+/// @param arr2 
+/// @return 
+Thread_struct_mult calloc_args(char *arr1, char *arr2);
+
+void fill_matrix_1_2(Thread_struct_mult args);
 
 /// @brief populate the matrix with ra,dom values [MIN .. MAX]
 /// @param matrix (__data_type **) 2D array
