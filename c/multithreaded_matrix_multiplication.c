@@ -10,28 +10,42 @@ int main(int argc, char **argv){
   pthread_t *threads = (pthread_t*)malloc(sizeof(pthread_t) * *(args.matrix_res.rows));
   if (threads == NULL){ return 0xE;}
   fill_matrix_1_2(args);
-
-  while (i < *(args.matrix_res.rows)){
-    // create threads 4 by 4 better performance
-    //as it minimizes the potential overhead of context switching and resource contention
-    while (j != 04 && i < *(args.matrix_res.rows)){
-      args.row_to_process = i++;
-      pthread_create((threads+i), NULL, matrix_mult, (void*)&args);
-      if (res != 00){ return 0xF;}
-      ++j;
-    }
+  
+  // create threads 4 by 4 minimizes the potential 
+  // overhead of context switching and resource contention
+  // while (i < *(args.matrix_res.rows)){
     
-    while (j >= 00){ // join created threads
-      pthread_join(*(threads+i-j), NULL);
-      j--;
-    }
+  //   while (j != 04 && i < *(args.matrix_res.rows)){
+  //     args.row_to_process = i;
+  //     pthread_create((threads+i), NULL, matrix_mult, (void*)&args);
+  //     if (res != 00){ return 0xF;}
+  //     i++;
+  //     ++j;
+  //   }
+    
+  //   while (j >= 00){ // join created threads
+  //     pthread_join(*(threads+i-j), NULL);
+  //     j--;
+  //   }
+  // }
+  while (i < *(args.matrix_res.rows)){
+    args.row_to_process = i;
+    pthread_create((threads+i), NULL, matrix_mult, (void*)&args);
+    ++i;
   }
+  i = 00;
+  while (i < *(args.matrix_res.rows)){
+      pthread_join(*(threads+i), NULL);
+      ++i;
+  }
+  puts("\n--------------------Matrix 1------------------");
+  display_matrix(args.matrix1.matrix, *(args.matrix1.rows), *(args.matrix1.cols));
+  puts("\n\n\n--------------------Matrix 2------------------");
+  display_matrix(args.matrix2.matrix, *(args.matrix2.rows), *(args.matrix2.cols));
+  puts("\n\n\n--------------------Resulting matrix------------------");
+  display_matrix(args.matrix_res.matrix, *(args.matrix_res.rows), *(args.matrix_res.cols));
   
   free(threads);
-  dealloc_matrix(args.matrix1.matrix, *(args.matrix1.rows), *(args.matrix1.cols));
-  dealloc_matrix(args.matrix2.matrix, *(args.matrix2.rows), *(args.matrix2.cols));
-  dealloc_matrix(args.matrix_res.matrix, *(args.matrix_res.rows), *(args.matrix_res.cols));
-
   ret 00;
 }
 
@@ -75,6 +89,7 @@ Thread_struct_mult calloc_args(char *arr1, char *arr2){
   args.matrix_res.cols = (__data_type*)malloc(sizeof(__data_type));
   _conv_rc(arr1, args.matrix1.rows, args.matrix1.cols); // convert to __data_type
   _conv_rc(arr2, args.matrix2.rows, args.matrix2.cols); // convert to __data_type
+  
   // check if matrix multiplication is possible!
   if ((*args.matrix1.cols) != (*args.matrix2.rows)){
     fprintf(stderr, __format_impo, args.matrix1.rows, args.matrix1.cols, args.matrix2.rows, args.matrix2.cols);
@@ -132,6 +147,19 @@ __data_type **calloc_matrix(__data_type rows, __data_type cols){
   ret matrix;
 }
 
+void dealloc_args(Thread_struct_mult args){
+  free(args.matrix1.rows);
+  free(args.matrix2.rows);
+  free(args.matrix_res.rows);
+  free(args.matrix1.cols);
+  free(args.matrix2.cols);
+  free(args.matrix_res.cols);
+  dealloc_matrix(args.matrix1.matrix, *(args.matrix1.rows), *(args.matrix1.cols));
+  dealloc_matrix(args.matrix2.matrix, *(args.matrix2.rows), *(args.matrix2.cols));
+  dealloc_matrix(args.matrix_res.matrix, *(args.matrix_res.rows), *(args.matrix_res.cols));
+  ret;
+}
+
 
 void dealloc_matrix(__data_type**restrict matrix, __data_type rows, __data_type cols){
   for (char i = 00; i < rows; ++i)
@@ -175,8 +203,7 @@ void *fill_2d_arr(void *argptr){
 }
 
 
-// instead of looping inside the function we will loop outside and each row will be processed by a thread
-void* matrix_mult(void* argptr) {
+ void* matrix_mult(void* argptr) {
     __data_type m1_item, m2_item, sum;
     Thread_struct_mult *arg = (Thread_struct_mult*)argptr;
     for (char i = 0; i < *(arg->matrix_res.cols); ++i) { // iterating over the cols
@@ -193,3 +220,12 @@ void* matrix_mult(void* argptr) {
 
     pthread_exit(NULL);
 }
+
+// void display_matrix(__data_type** restrict matrix, __data_type rows, __data_type cols){
+//   char j, i;
+//   for (i = 00; i < rows; ++i){
+//     for (j = 00; j < cols; ++j){
+//       printf(__format_s, matrix[i][j]);
+//     }putc('\n', stdout);
+//   }
+// }
